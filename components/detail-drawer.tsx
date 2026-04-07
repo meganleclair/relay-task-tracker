@@ -359,28 +359,30 @@ export function DetailDrawer({
           />
         </Box>
 
-        <Box>
-          <Group gap={8} mb={10}>
-            <FontAwesomeIcon icon={faClipboardList} style={fieldIconStyle} />
+        {item.summary.trim() ? (
+          <Box>
+            <Group gap={8} mb={10}>
+              <FontAwesomeIcon icon={faClipboardList} style={fieldIconStyle} />
+              <Text
+                size="xs"
+                fw={500}
+                tt="uppercase"
+                lts={0.04}
+                style={{ color: "var(--relay-text-meta)" }}
+              >
+                Summary
+              </Text>
+            </Group>
             <Text
-              size="xs"
-              fw={500}
-              tt="uppercase"
-              lts={0.04}
-              style={{ color: "var(--relay-text-meta)" }}
+              size="sm"
+              lh={1.65}
+              fw={400}
+              style={{ color: "var(--relay-text-secondary)" }}
             >
-              Summary
+              {item.summary}
             </Text>
-          </Group>
-          <Text
-            size="sm"
-            lh={1.65}
-            fw={400}
-            style={{ color: "var(--relay-text-secondary)" }}
-          >
-            {item.summary}
-          </Text>
-        </Box>
+          </Box>
+        ) : null}
 
         <Box>
           <Text

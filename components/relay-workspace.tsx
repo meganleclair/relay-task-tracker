@@ -8,6 +8,7 @@ import {
   faClipboardList,
   faInbox,
   faMagnifyingGlass,
+  faPlus,
   faRightFromBracket,
   faStopwatch,
 } from "@fortawesome/free-solid-svg-icons";
@@ -62,6 +63,10 @@ import {
 } from "@/lib/dashboard-mock";
 import { formatDueDate, formatUpdated } from "@/lib/format";
 import { DetailDrawer } from "@/components/detail-drawer";
+import {
+  NewItemModal,
+  type NewItemFormValues,
+} from "@/components/new-item-modal";
 import {
   RelayInlineDueDatePicker,
   RelayInlineOwnerSelect,
@@ -254,6 +259,13 @@ export function RelayWorkspace() {
     number | null
   >(null);
   const [hoveredActivityDay, setHoveredActivityDay] = useState<number | null>(
+    null,
+  );
+  const [newItemModalOpen, setNewItemModalOpen] = useState(false);
+  const [createdRowFlashId, setCreatedRowFlashId] = useState<string | null>(
+    null,
+  );
+  const createdFlashClearRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
   const weekdayTouchCounts = useMemo(() => countItemsByWeekday(items), [items]);
@@ -510,6 +522,14 @@ export function RelayWorkspace() {
     setMyItemsOnly(false);
   };
 
+  const clearAllListFilters = () => {
+    setHeaderSearch("");
+    setStatusFilter("all");
+    setOwnerFilter("all");
+    setMyItemsOnly(false);
+    setActivityWeekdayFilter(null);
+  };
+
   const ownerSelectData = [
     { value: "all", label: "All owners" },
     ...OWNERS.map((o) => ({ value: o, label: o })),
@@ -599,6 +619,39 @@ export function RelayWorkspace() {
 
   const toggleMetricStatusFilter = (status: ItemStatus) => {
     setStatusFilter((prev) => (prev === status ? "all" : status));
+  };
+
+  const handleCreateItem = (values: NewItemFormValues) => {
+    const now = new Date().toISOString();
+    const id = `rly-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const entry = {
+      id: newId(),
+      at: now,
+      text: "Item created",
+      kind: "system" as const,
+    };
+    const item: RelayItem = {
+      id,
+      name: values.name,
+      client: values.client,
+      type: values.type,
+      status: "Draft",
+      owner: values.owner,
+      priority: values.priority,
+      dueAt: values.dueAt,
+      updatedAt: now,
+      summary: values.summary,
+      activity: [entry],
+    };
+    setItems((prev) => [item, ...prev]);
+    setNewItemModalOpen(false);
+    setCreatedRowFlashId(id);
+    if (createdFlashClearRef.current)
+      clearTimeout(createdFlashClearRef.current);
+    createdFlashClearRef.current = setTimeout(() => {
+      setCreatedRowFlashId(null);
+      createdFlashClearRef.current = null;
+    }, 2500);
   };
 
   if (!sessionSignedIn) {
@@ -772,35 +825,65 @@ export function RelayWorkspace() {
                 >
                   Track progress, unblock work, and keep things moving.
                 </Text>
-                <Group gap="sm" align="center" wrap="wrap">
-                  <Title order={2} size="h2" fw={600} c="warmGray.9">
-                    {"Your team's queue"}
-                  </Title>
-                  <Badge
-                    variant="light"
-                    color="gray"
+                <Group
+                  justify="space-between"
+                  align="center"
+                  wrap="wrap"
+                  gap="md"
+                >
+                  <Group gap="sm" align="center" wrap="wrap" style={{ minWidth: 0 }}>
+                    <Title order={2} size="h2" fw={600} c="warmGray.9">
+                      {"Your team's queue"}
+                    </Title>
+                    <Badge
+                      variant="light"
+                      color="gray"
+                      size="sm"
+                      radius="md"
+                      fw={500}
+                      styles={{
+                        root: { textTransform: "none", letterSpacing: "normal" },
+                      }}
+                      leftSection={
+                        <Box
+                          component="span"
+                          className="relay-header-live-dot"
+                          style={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: "50%",
+                            flexShrink: 0,
+                            alignSelf: "center",
+                          }}
+                        />
+                      }
+                    >
+                      Updated just now
+                    </Badge>
+                  </Group>
+                  <Button
+                    variant="default"
                     size="sm"
                     radius="md"
-                    fw={500}
-                    styles={{
-                      root: { textTransform: "none", letterSpacing: "normal" },
-                    }}
                     leftSection={
-                      <Box
-                        component="span"
-                        className="relay-header-live-dot"
-                        style={{
-                          width: 6,
-                          height: 6,
-                          borderRadius: "50%",
-                          flexShrink: 0,
-                          alignSelf: "center",
-                        }}
+                      <FontAwesomeIcon
+                        icon={faPlus}
+                        style={{ width: 12, height: 12, fontSize: 12 }}
                       />
                     }
+                    onClick={() => setNewItemModalOpen(true)}
+                    styles={{
+                      root: {
+                        flexShrink: 0,
+                        borderColor: "var(--relay-border-subtle)",
+                        color: "var(--relay-text-secondary)",
+                        fontWeight: 500,
+                        backgroundColor: "var(--relay-surface-card)",
+                      },
+                    }}
                   >
-                    Updated just now
-                  </Badge>
+                    New item
+                  </Button>
                 </Group>
               </Stack>
 
@@ -1331,7 +1414,9 @@ export function RelayWorkspace() {
                         }}
                       />
                       <Title order={5} fw={600} c="warmGray.8" size="h5">
-                        No items match your filters
+                        {items.length === 0
+                          ? "Nothing here yet"
+                          : "No items match your filters"}
                       </Title>
                       <Text
                         size="xs"
@@ -1340,22 +1425,51 @@ export function RelayWorkspace() {
                         fw={400}
                         style={{ color: "var(--relay-text-meta)" }}
                       >
-                        {!filtersActive
-                          ? "The queue is empty."
-                          : activityWeekdayFilter !== null
-                            ? "Try clearing the day filter or loosening other filters."
-                            : "Try Reset filters in the toolbar or adjust search."}
+                        {items.length === 0
+                          ? "Create an item to get started."
+                          : filtersActive
+                            ? "Loosen filters or clear search to see items again."
+                            : "The queue is empty."}
                       </Text>
-                      {activityWeekdayFilter !== null && (
+                      {filtersActive ? (
+                        <Group gap="xs" wrap="wrap" justify="center" mt={4}>
+                          <Button
+                            variant="default"
+                            size="xs"
+                            radius="md"
+                            onClick={clearAllListFilters}
+                          >
+                            Clear all filters
+                          </Button>
+                          {activityWeekdayFilter !== null ? (
+                            <Button
+                              variant="subtle"
+                              color="gray"
+                              size="xs"
+                              radius="md"
+                              onClick={clearActivityDayFilter}
+                            >
+                              Day filter only
+                            </Button>
+                          ) : null}
+                        </Group>
+                      ) : items.length === 0 ? (
                         <Button
                           variant="default"
                           size="xs"
                           radius="md"
-                          onClick={clearActivityDayFilter}
+                          leftSection={
+                            <FontAwesomeIcon
+                              icon={faPlus}
+                              style={{ width: 12, height: 12, fontSize: 12 }}
+                            />
+                          }
+                          onClick={() => setNewItemModalOpen(true)}
+                          mt={4}
                         >
-                          Clear day filter
+                          New item
                         </Button>
-                      )}
+                      ) : null}
                     </Stack>
                   ) : (
                     <Box
@@ -1429,6 +1543,11 @@ export function RelayWorkspace() {
                                   key={row.id}
                                   data-relay-selected={
                                     isSelected ? "true" : "false"
+                                  }
+                                  data-relay-created-flash={
+                                    row.id === createdRowFlashId
+                                      ? "true"
+                                      : undefined
                                   }
                                   onClick={() => setSelectedId(row.id)}
                                   style={{ cursor: "pointer" }}
@@ -1531,6 +1650,12 @@ export function RelayWorkspace() {
         onChangeOwner={handleChangeOwner}
         onChangeDueDate={handleChangeDueDate}
         onAddNote={handleAddNote}
+      />
+
+      <NewItemModal
+        opened={newItemModalOpen}
+        onClose={() => setNewItemModalOpen(false)}
+        onCreate={handleCreateItem}
       />
     </AppShell>
   );

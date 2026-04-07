@@ -1,4 +1,13 @@
-import type { RelayItem } from "./types";
+import type { ItemType, RelayItem } from "./types";
+
+/** Intake / table type options (single source for forms and `ItemType`). */
+export const ITEM_TYPES: ItemType[] = [
+  "Application Review",
+  "Renewal Review",
+  "Risk Assessment",
+  "Coverage Request",
+  "Policy Change Request",
+];
 
 export const OWNERS = [
   "Maya Chen",

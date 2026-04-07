@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Relay — Workflow & decisions
 
-## Getting Started
+A single-screen **operations workspace** demo: a filterable team queue, inline table edits, a detail drawer, and a lightweight **New item** intake flow. Built to feel like a calm internal tool—not a ticket system.
 
-First, run the development server:
+**Live:** deploy to [Vercel](https://vercel.com/new) (or any Next.js host) from this repo.
+
+## Stack
+
+- **Next.js** (App Router) · **React** · **TypeScript**
+- **Mantine** (layout, table, forms, modal, drawer, dates)
+- **Font Awesome** (icons)
+- **Client-only state** — mock data in `lib/`; no API (easy to swap for a backend later)
+
+## What to try
+
+1. **Search** (header + mobile toolbar) and **filters** (status, owner, mine-only, activity day).
+2. **Sort** by updated time, priority, or due date.
+3. **Edit** status, owner, priority, and due date **inline** in the table.
+4. Open a row for the **drawer** (summary, activity, notes, status change).
+5. **New item** — add a row; it appears at the top with a short highlight and a system activity entry.
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build   # production check
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project layout
 
-## Learn More
+| Area | Location |
+|------|-----------|
+| Main shell & page | `components/relay-workspace.tsx` |
+| Table editors | `components/relay-table-inline-fields.tsx` |
+| Detail drawer | `components/detail-drawer.tsx` |
+| New item modal | `components/new-item-modal.tsx` |
+| Types & mock data | `lib/types.ts`, `lib/mock-data.ts` |
+| Design tokens | `app/globals.css`, `app/theme.ts` |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).

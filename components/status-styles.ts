@@ -16,9 +16,9 @@ export const STATUS_VISUAL: Record<
     border: "rgba(98, 72, 148, 0.38)",
   },
   Approved: {
-    background: "rgba(72, 145, 102, 0.2)",
-    color: "#1e5a36",
-    border: "rgba(56, 120, 82, 0.38)",
+    background: "rgba(70, 118, 175, 0.22)",
+    color: "#2a4a72",
+    border: "rgba(56, 98, 155, 0.38)",
   },
   Blocked: {
     background: "rgba(230, 120, 95, 0.2)",
@@ -34,7 +34,7 @@ export const STATUS_VISUAL: Record<
 
 /** Muted dots for priority (secondary to status badges). */
 export const PRIORITY_DOT: Record<Priority, string> = {
-  Low: "#6b8fa3",
+  Low: "#9a9690",
   Medium: "#b8892a",
   High: "#c24e3d",
 };
@@ -55,9 +55,9 @@ export const STATUS_BADGE_TABLE: Record<
     border: "#ddd5ea",
   },
   Approved: {
-    background: "#e6efe8",
-    color: "#354a3c",
-    border: "#cddfd4",
+    background: "#e8eef8",
+    color: "#2f4a6e",
+    border: "#c8d6ea",
   },
   Blocked: {
     background: "#f5ebe7",
@@ -77,9 +77,9 @@ export const PRIORITY_BADGE_TABLE: Record<
   { background: string; color: string; border: string }
 > = {
   Low: {
-    background: "#e8f0f4",
-    color: "#3d5a66",
-    border: "#c5d6de",
+    background: "#efeeec",
+    color: "#5c5a56",
+    border: "#dcdad6",
   },
   Medium: {
     background: "#f5f0e4",

@@ -69,6 +69,22 @@
   background-color: var(--relay-table-row-selected-hover) !important;
 }
 
+@keyframes relay-row-created-flash {
+  0% {
+    background-color: rgba(154, 107, 79, 0.16);
+  }
+  35% {
+    background-color: rgba(154, 107, 79, 0.07);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.relay-items-table tbody tr[data-relay-created-flash="true"] {
+  animation: relay-row-created-flash 2.4s ease-out forwards;
+}
+
 /* Inline table editors: quiet at rest, chevron + hover hint, flash on commit */
 .relay-inline-field {
   border-radius: var(--mantine-radius-sm);
