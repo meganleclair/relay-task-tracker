@@ -1,9 +1,3 @@
-/**
- * Fixed reference time for dashboard stats so “last 7 days” math is pure during render.
- * (Mock product date; aligns with sample data around early April 2026.)
- */
-export const DASHBOARD_AS_OF_MS = Date.UTC(2026, 3, 5, 12, 0, 0);
-
 /** Short labels for Mon–Fri activity chart (order matches weekday index 0–4). */
 export const QUEUE_WEEKDAY_LABELS = [
   "Mon",

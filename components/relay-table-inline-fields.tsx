@@ -31,6 +31,15 @@ const STATUS_OPTIONS: ItemStatus[] = [
 
 const PRIORITY_OPTIONS: Priority[] = ["Low", "Medium", "High"];
 
+/** Type guard — Mantine Select returns `string | null`; this narrows it safely. */
+function isItemStatus(v: string): v is ItemStatus {
+  return (STATUS_OPTIONS as string[]).includes(v);
+}
+
+function isPriority(v: string): v is Priority {
+  return (PRIORITY_OPTIONS as string[]).includes(v);
+}
+
 const navIconStyle = {
   width: 12,
   height: 12,
@@ -350,8 +359,8 @@ export function RelayInlineStatusSelect({
             data={STATUS_OPTIONS}
             value={status}
             onChange={(v) => {
-              if (!v) return;
-              onChange(itemId, v as ItemStatus);
+              if (!v || !isItemStatus(v)) return;
+              onChange(itemId, v);
               triggerFlash();
             }}
             allowDeselect={false}
@@ -363,7 +372,7 @@ export function RelayInlineStatusSelect({
               <Box
                 component="span"
                 style={optionPillStyle(
-                  STATUS_BADGE_TABLE[option.value as ItemStatus],
+                  isItemStatus(option.value) ? STATUS_BADGE_TABLE[option.value] : STATUS_BADGE_TABLE["Draft"],
                 )}
               >
                 {option.label}
@@ -405,8 +414,8 @@ export function RelayInlinePrioritySelect({
         data={PRIORITY_OPTIONS}
         value={priority}
         onChange={(v) => {
-          if (!v) return;
-          onChange(itemId, v as Priority);
+          if (!v || !isPriority(v)) return;
+          onChange(itemId, v);
           triggerFlash();
         }}
         allowDeselect={false}
@@ -418,7 +427,7 @@ export function RelayInlinePrioritySelect({
           <Box
             component="span"
             style={optionPillStyle(
-              PRIORITY_BADGE_TABLE[option.value as Priority],
+              isPriority(option.value) ? PRIORITY_BADGE_TABLE[option.value] : PRIORITY_BADGE_TABLE["Medium"],
             )}
           >
             {option.label}
@@ -509,7 +518,7 @@ export function RelayInlineDueDatePicker({
           else onChange(itemId, dateToDueIso(d));
           triggerFlash();
         }}
-        valueFormat="MM/DD/YY"
+        valueFormat="MM/DD/YYYY"
         size="xs"
         clearable={false}
         allowDeselect

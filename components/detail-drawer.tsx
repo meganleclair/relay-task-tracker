@@ -9,11 +9,12 @@ import {
   faClipboardList,
   faPenToSquare,
   faUser,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import {
+  ActionIcon,
   Box,
   Button,
-  Drawer,
   Group,
   ScrollArea,
   Select,
@@ -166,9 +167,8 @@ const dueDatePickerStyles = {
   },
 };
 
-type DetailDrawerProps = {
+type DetailPanelProps = {
   item: RelayItem | null;
-  opened: boolean;
   onClose: () => void;
   onChangeStatus: (id: string, status: ItemStatus) => void;
   onChangeOwner: (id: string, owner: string) => void;
@@ -176,15 +176,20 @@ type DetailDrawerProps = {
   onAddNote: (id: string, text: string) => void;
 };
 
-export function DetailDrawer({
+/**
+ * Inline split-panel variant — renders the detail content as a sticky-header
+ * scrollable column sitting beside the table, with no Mantine Drawer overlay.
+ * The parent container is responsible for clipping width during the open/close
+ * transition; this component assumes it fills 100% of the available height.
+ */
+export function DetailPanel({
   item,
-  opened,
   onClose,
   onChangeStatus,
   onChangeOwner,
   onChangeDueDate,
   onAddNote,
-}: DetailDrawerProps) {
+}: DetailPanelProps) {
   const [noteDraft, setNoteDraft] = useState("");
 
   const handleAddNote = () => {
@@ -202,25 +207,21 @@ export function DetailDrawer({
   );
 
   return (
-    <Drawer
-      opened={opened}
-      onClose={onClose}
-      position="right"
-      size={440}
-      padding="lg"
-      withOverlay
-      overlayProps={{ opacity: 0.2, blur: 0 }}
-      styles={{
-        content: {
+    <Stack gap={0}>
+      {/* Sticky header */}
+      <Box
+        px="lg"
+        pt="lg"
+        pb="md"
+        style={{
+          borderBottom: "1px solid var(--relay-border-hairline)",
+          position: "sticky",
+          top: 0,
           backgroundColor: "var(--relay-surface-card)",
-          boxShadow: "var(--relay-drawer-shadow)",
-          borderLeft: "1px solid var(--relay-border-hairline)",
-        },
-        header: { marginBottom: 0 },
-        body: { paddingTop: 8 },
-      }}
-      title={
-        <Stack gap="sm" pr="md">
+          zIndex: 2,
+        }}
+      >
+        <Group justify="space-between" align="flex-start" wrap="nowrap" mb="xs">
           <Text
             size="xs"
             fw={500}
@@ -230,47 +231,51 @@ export function DetailDrawer({
           >
             Review details
           </Text>
-          <Title
-            order={3}
-            fw={600}
-            lh={1.35}
-            style={{ color: "var(--relay-text-strong)", fontSize: "1.125rem" }}
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            size="sm"
+            radius="sm"
+            onClick={onClose}
+            aria-label="Close detail panel"
+            style={{ flexShrink: 0, marginTop: -2 }}
           >
-            {item.name}
-          </Title>
-          <Group gap="md" align="center">
-            <Tooltip label={STATUS_HELP[item.status]} multiline w={280} withArrow>
-              <Box component="span" style={{ cursor: "help" }}>
-                <RelayPill {...STATUS_VISUAL[item.status]}>
-                  {item.status}
-                </RelayPill>
-              </Box>
-            </Tooltip>
-            <PriorityInline priority={item.priority} />
-          </Group>
-        </Stack>
-      }
-    >
-      <Stack gap={32} pb="xl">
+            <FontAwesomeIcon
+              icon={faXmark}
+              style={{ width: 12, height: 12, fontSize: 12 }}
+            />
+          </ActionIcon>
+        </Group>
+        <Title
+          order={3}
+          fw={600}
+          lh={1.35}
+          mb="sm"
+          pr="xs"
+          style={{ color: "var(--relay-text-strong)", fontSize: "1.125rem" }}
+        >
+          {item.name}
+        </Title>
+        <Group gap="md" align="center">
+          <Tooltip label={STATUS_HELP[item.status]} multiline w={280} withArrow>
+            <Box component="span" style={{ cursor: "help" }}>
+              <RelayPill {...STATUS_VISUAL[item.status]}>{item.status}</RelayPill>
+            </Box>
+          </Tooltip>
+          <PriorityInline priority={item.priority} />
+        </Group>
+      </Box>
+
+      {/* Body */}
+      <Stack gap={32} px="lg" py="lg" pb="xl">
         <Box>
           <Group gap={8} mb={10}>
             <FontAwesomeIcon icon={faBuilding} style={fieldIconStyle} />
-            <Text
-              size="xs"
-              fw={500}
-              tt="uppercase"
-              lts={0.04}
-              style={{ color: "var(--relay-text-meta)" }}
-            >
+            <Text size="xs" fw={500} tt="uppercase" lts={0.04} style={{ color: "var(--relay-text-meta)" }}>
               Client
             </Text>
           </Group>
-          <Text
-            size="sm"
-            fw={500}
-            lh={1.55}
-            style={{ color: "var(--relay-text-secondary)" }}
-          >
+          <Text size="sm" fw={500} lh={1.55} style={{ color: "var(--relay-text-secondary)" }}>
             {item.client}
           </Text>
         </Box>
@@ -278,13 +283,7 @@ export function DetailDrawer({
         <Box>
           <Group gap={8} mb={10}>
             <FontAwesomeIcon icon={faUser} style={fieldIconStyle} />
-            <Text
-              size="xs"
-              fw={500}
-              tt="uppercase"
-              lts={0.04}
-              style={{ color: "var(--relay-text-meta)" }}
-            >
+            <Text size="xs" fw={500} tt="uppercase" lts={0.04} style={{ color: "var(--relay-text-meta)" }}>
               Assigned to
             </Text>
           </Group>
@@ -294,25 +293,14 @@ export function DetailDrawer({
             onChange={(v) => v && onChangeOwner(item.id, v)}
             allowDeselect={false}
             size="sm"
-            styles={{
-              input: {
-                backgroundColor: "var(--relay-input-fill)",
-                border: "1px solid var(--relay-border-subtle)",
-              },
-            }}
+            styles={{ input: { backgroundColor: "var(--relay-input-fill)", border: "1px solid var(--relay-border-subtle)" } }}
           />
         </Box>
 
         <Box>
           <Group gap={8} mb={10}>
             <FontAwesomeIcon icon={faCalendarDays} style={fieldIconStyle} />
-            <Text
-              size="xs"
-              fw={500}
-              tt="uppercase"
-              lts={0.04}
-              style={{ color: "var(--relay-text-meta)" }}
-            >
+            <Text size="xs" fw={500} tt="uppercase" lts={0.04} style={{ color: "var(--relay-text-meta)" }}>
               Due date
             </Text>
           </Group>
@@ -330,12 +318,8 @@ export function DetailDrawer({
             clearable
             highlightToday
             weekdayFormat="ddd"
-            previousIcon={
-              <FontAwesomeIcon icon={faChevronLeft} style={navIconStyle} />
-            }
-            nextIcon={
-              <FontAwesomeIcon icon={faChevronRight} style={navIconStyle} />
-            }
+            previousIcon={<FontAwesomeIcon icon={faChevronLeft} style={navIconStyle} />}
+            nextIcon={<FontAwesomeIcon icon={faChevronRight} style={navIconStyle} />}
             popoverProps={{
               width: "max-content",
               position: "bottom-start",
@@ -352,9 +336,7 @@ export function DetailDrawer({
                 },
               },
             }}
-            clearButtonProps={{
-              style: { color: "var(--relay-text-meta)" },
-            }}
+            clearButtonProps={{ style: { color: "var(--relay-text-meta)" } }}
             styles={dueDatePickerStyles}
           />
         </Box>
@@ -363,36 +345,18 @@ export function DetailDrawer({
           <Box>
             <Group gap={8} mb={10}>
               <FontAwesomeIcon icon={faClipboardList} style={fieldIconStyle} />
-              <Text
-                size="xs"
-                fw={500}
-                tt="uppercase"
-                lts={0.04}
-                style={{ color: "var(--relay-text-meta)" }}
-              >
+              <Text size="xs" fw={500} tt="uppercase" lts={0.04} style={{ color: "var(--relay-text-meta)" }}>
                 Summary
               </Text>
             </Group>
-            <Text
-              size="sm"
-              lh={1.65}
-              fw={400}
-              style={{ color: "var(--relay-text-secondary)" }}
-            >
+            <Text size="sm" lh={1.65} fw={400} style={{ color: "var(--relay-text-secondary)" }}>
               {item.summary}
             </Text>
           </Box>
         ) : null}
 
         <Box>
-          <Text
-            size="xs"
-            fw={500}
-            tt="uppercase"
-            lts={0.04}
-            mb="sm"
-            style={{ color: "var(--relay-text-meta)" }}
-          >
+          <Text size="xs" fw={500} tt="uppercase" lts={0.04} mb="sm" style={{ color: "var(--relay-text-meta)" }}>
             Change status
           </Text>
           <Select
@@ -401,25 +365,14 @@ export function DetailDrawer({
             onChange={(v) => v && onChangeStatus(item.id, v as ItemStatus)}
             allowDeselect={false}
             size="sm"
-            styles={{
-              input: {
-                backgroundColor: "var(--relay-input-fill)",
-                border: "1px solid var(--relay-border-subtle)",
-              },
-            }}
+            styles={{ input: { backgroundColor: "var(--relay-input-fill)", border: "1px solid var(--relay-border-subtle)" } }}
           />
         </Box>
 
         <Box>
           <Group gap={8} mb="sm">
             <FontAwesomeIcon icon={faPenToSquare} style={fieldIconStyle} />
-            <Text
-              size="xs"
-              fw={500}
-              tt="uppercase"
-              lts={0.04}
-              style={{ color: "var(--relay-text-meta)" }}
-            >
+            <Text size="xs" fw={500} tt="uppercase" lts={0.04} style={{ color: "var(--relay-text-meta)" }}>
               Activity
             </Text>
           </Group>
@@ -431,27 +384,16 @@ export function DetailDrawer({
                   style={{
                     paddingBottom: idx < activitySorted.length - 1 ? 14 : 0,
                     marginBottom: idx < activitySorted.length - 1 ? 14 : 0,
-                    borderBottom:
-                      idx < activitySorted.length - 1
-                        ? "1px solid var(--relay-border-subtle)"
-                        : undefined,
+                    borderBottom: idx < activitySorted.length - 1
+                      ? "1px solid var(--relay-border-subtle)"
+                      : undefined,
                   }}
                 >
-                  <Text
-                    size="xs"
-                    mb={6}
-                    fw={400}
-                    style={{ color: "var(--relay-text-meta)", fontSize: "0.6875rem" }}
-                  >
+                  <Text size="xs" mb={6} fw={400} style={{ color: "var(--relay-text-meta)", fontSize: "0.6875rem" }}>
                     {formatActivityTime(entry.at)}
                     {entry.kind === "note" ? " · Note" : " · Update"}
                   </Text>
-                  <Text
-                    size="sm"
-                    lh={1.55}
-                    fw={500}
-                    style={{ color: "var(--relay-text-strong)" }}
-                  >
+                  <Text size="sm" lh={1.55} fw={500} style={{ color: "var(--relay-text-strong)" }}>
                     {entry.text}
                   </Text>
                 </Box>
@@ -461,14 +403,7 @@ export function DetailDrawer({
         </Box>
 
         <Box>
-          <Text
-            size="xs"
-            fw={500}
-            tt="uppercase"
-            lts={0.04}
-            mb="sm"
-            style={{ color: "var(--relay-text-meta)" }}
-          >
+          <Text size="xs" fw={500} tt="uppercase" lts={0.04} mb="sm" style={{ color: "var(--relay-text-meta)" }}>
             Add note
           </Text>
           <Textarea
@@ -477,12 +412,7 @@ export function DetailDrawer({
             onChange={(e) => setNoteDraft(e.currentTarget.value)}
             minRows={3}
             size="sm"
-            styles={{
-              input: {
-                backgroundColor: "var(--relay-input-fill)",
-                border: "1px solid var(--relay-border-subtle)",
-              },
-            }}
+            styles={{ input: { backgroundColor: "var(--relay-input-fill)", border: "1px solid var(--relay-border-subtle)" } }}
           />
           <Group justify="flex-end" mt="sm">
             <Button
@@ -497,6 +427,6 @@ export function DetailDrawer({
           </Group>
         </Box>
       </Stack>
-    </Drawer>
+    </Stack>
   );
 }

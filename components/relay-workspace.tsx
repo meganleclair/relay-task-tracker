@@ -57,12 +57,11 @@ import {
 } from "@/lib/activity-weekday";
 import {
   AVG_TURNAROUND_DAYS_MOCK,
-  DASHBOARD_AS_OF_MS,
   getActivityWeekStats,
   QUEUE_WEEKDAY_LABELS,
 } from "@/lib/dashboard-mock";
 import { formatDueDate, formatUpdated } from "@/lib/format";
-import { DetailDrawer } from "@/components/detail-drawer";
+import { DetailPanel } from "@/components/detail-drawer";
 import {
   NewItemModal,
   type NewItemFormValues,
@@ -200,6 +199,22 @@ function msDays(n: number) {
 
 const SIGNED_OUT_STORAGE_KEY = "relay-signed-out";
 
+/** Scripted live updates that fire every 30 s to keep the "Updated just now" badge honest. */
+type LiveTick =
+  | { kind: "note"; itemId: string; text: string }
+  | { kind: "status"; itemId: string; status: ItemStatus };
+
+const LIVE_TICKS: LiveTick[] = [
+  { kind: "note",   itemId: "rly-1042", text: "Subcontractor exposure confirmed with insured" },
+  { kind: "status", itemId: "rly-1019", status: "In Review" },
+  { kind: "note",   itemId: "rly-1031", text: "CAT modeling results passed secondary review" },
+  { kind: "status", itemId: "rly-0996", status: "In Review" },
+  { kind: "note",   itemId: "rly-1027", text: "Broker confirmed valuation method — unblocking" },
+  { kind: "status", itemId: "rly-1042", status: "Approved" },
+  { kind: "note",   itemId: "rly-1008", text: "Fire protection testing dates received from client" },
+  { kind: "status", itemId: "rly-1027", status: "In Review" },
+];
+
 function RelaySignedOutScreen({ onSignIn }: { onSignIn: () => void }) {
   return (
     <Box
@@ -268,6 +283,45 @@ export function RelayWorkspace() {
   const createdFlashClearRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  const liveTickIndex = useRef(0);
+
+  // Fire scripted live updates every 30 s so the "Updated just now" badge stays accurate.
+  useEffect(() => {
+    const id = setInterval(() => {
+      const tick = LIVE_TICKS[liveTickIndex.current % LIVE_TICKS.length];
+      liveTickIndex.current += 1;
+      const now = new Date().toISOString();
+      setItems((prev) =>
+        prev.map((item) => {
+          if (item.id !== tick.itemId) return item;
+          if (tick.kind === "note") {
+            return {
+              ...item,
+              updatedAt: now,
+              activity: [
+                { id: newId(), at: now, text: tick.text, kind: "note" as const },
+                ...item.activity,
+              ],
+            };
+          }
+          // status tick — skip if already at target
+          if (item.status === tick.status) return item;
+          return {
+            ...item,
+            status: tick.status,
+            updatedAt: now,
+            activity: [
+              { id: newId(), at: now, text: `Status set to ${tick.status}`, kind: "system" as const },
+              ...item.activity,
+            ],
+          };
+        }),
+      );
+    }, 30_000);
+    return () => clearInterval(id);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const weekdayTouchCounts = useMemo(() => countItemsByWeekday(items), [items]);
 
   useEffect(() => {
@@ -354,7 +408,11 @@ export function RelayWorkspace() {
   ]);
 
   const summary = useMemo(() => {
-    const weekAgo = DASHBOARD_AS_OF_MS - msDays(7);
+    // Use the most recent updatedAt across all items as the "current time" for the
+    // mock dataset — keeps "Closed in the last week" accurate no matter when the
+    // demo is running, without coupling it to a hardcoded calendar date.
+    const dataAsOf = Math.max(...items.map((i) => new Date(i.updatedAt).getTime()));
+    const weekAgo = dataAsOf - msDays(7);
     const inReview = items.filter((i) => i.status === "In Review").length;
     const blocked = items.filter((i) => i.status === "Blocked").length;
     const completedThisWeek = items.filter(
@@ -667,7 +725,7 @@ export function RelayWorkspace() {
         main: {
           background: "transparent",
           paddingTop: 0,
-          paddingBottom: "2.5rem",
+          paddingBottom: 0,
         },
         header: {
           background: "var(--relay-surface-card)",
@@ -803,6 +861,9 @@ export function RelayWorkspace() {
       </AppShell.Header>
 
       <AppShell.Main>
+        {/* Flex row: scrollable content left + sticky detail panel right */}
+        <Box style={{ display: "flex", alignItems: "flex-start" }}>
+          <Box style={{ flex: 1, minWidth: 0 }}>
         <Box
           style={{
             background: "var(--relay-bg-gradient)",
@@ -888,6 +949,7 @@ export function RelayWorkspace() {
               </Stack>
 
               <SimpleGrid cols={{ base: 1, xs: 2, lg: 4 }} spacing="lg">
+                <Tooltip label="Filter by In Review" openDelay={600} withArrow position="top">
                 <UnstyledButton
                   type="button"
                   aria-pressed={statusFilter === "In Review"}
@@ -939,6 +1001,8 @@ export function RelayWorkspace() {
                     </Stack>
                   </Paper>
                 </UnstyledButton>
+                </Tooltip>
+                <Tooltip label="Filter by Blocked" openDelay={600} withArrow position="top">
                 <UnstyledButton
                   type="button"
                   aria-pressed={statusFilter === "Blocked"}
@@ -990,6 +1054,8 @@ export function RelayWorkspace() {
                     </Stack>
                   </Paper>
                 </UnstyledButton>
+                </Tooltip>
+                <Tooltip label="Filter by Completed" openDelay={600} withArrow position="top">
                 <UnstyledButton
                   type="button"
                   aria-pressed={statusFilter === "Complete"}
@@ -1041,6 +1107,7 @@ export function RelayWorkspace() {
                     </Stack>
                   </Paper>
                 </UnstyledButton>
+                </Tooltip>
                 <Paper radius="md" p={{ base: "md", sm: "lg" }} style={panelSurface}>
                   <Stack gap="sm">
                     <Group gap={8} align="baseline" wrap="nowrap">
@@ -1175,6 +1242,7 @@ export function RelayWorkspace() {
                           <UnstyledButton
                             type="button"
                             aria-pressed={selected}
+                            aria-label={`${ACTIVITY_WEEKDAY_FULL_NAMES[i]}: ${v} ${v === 1 ? "item" : "items"} touched`}
                             onClick={() =>
                               setActivityWeekdayFilter((p) =>
                                 p === i ? null : i,
@@ -1640,17 +1708,45 @@ export function RelayWorkspace() {
             </Stack>
           </Container>
         </Box>
-      </AppShell.Main>
+          </Box>{/* end scrollable content */}
 
-      <DetailDrawer
-        item={selectedRecord}
-        opened={drawerOpened}
-        onClose={() => setSelectedId(null)}
-        onChangeStatus={handleChangeStatus}
-        onChangeOwner={handleChangeOwner}
-        onChangeDueDate={handleChangeDueDate}
-        onAddNote={handleAddNote}
-      />
+          {/* Sticky split detail panel */}
+          <Box
+            style={{
+              width: drawerOpened ? 440 : 0,
+              flexShrink: 0,
+              overflow: "hidden",
+              transition: "width 0.28s cubic-bezier(0.4, 0, 0.2, 1)",
+              position: "sticky",
+              top: 0,
+              height: "calc(100vh - 64px)",
+              alignSelf: "flex-start",
+            }}
+          >
+            <Box
+              style={{
+                width: 440,
+                height: "100%",
+                overflowY: "auto",
+                borderLeft: "1px solid var(--relay-border-hairline)",
+                background: "var(--relay-surface-card)",
+                boxShadow: "-4px 0 20px rgba(44, 40, 36, 0.04)",
+              }}
+            >
+              {selectedRecord && (
+                <DetailPanel
+                  item={selectedRecord}
+                  onClose={() => setSelectedId(null)}
+                  onChangeStatus={handleChangeStatus}
+                  onChangeOwner={handleChangeOwner}
+                  onChangeDueDate={handleChangeDueDate}
+                  onAddNote={handleAddNote}
+                />
+              )}
+            </Box>
+          </Box>
+        </Box>{/* end flex row */}
+      </AppShell.Main>
 
       <NewItemModal
         opened={newItemModalOpen}
