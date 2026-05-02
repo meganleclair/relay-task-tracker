@@ -1,12 +1,11 @@
 import type { ItemType, RelayItem } from "./types";
 
-/** Intake / table type options (single source for forms and `ItemType`). */
 export const ITEM_TYPES: ItemType[] = [
-  "Application Review",
-  "Renewal Review",
-  "Risk Assessment",
-  "Coverage Request",
-  "Policy Change Request",
+  "Incident Response Review",
+  "Ransomware Assessment",
+  "Data Breach Evaluation",
+  "Cyber Renewal",
+  "Sublimit Review",
 ];
 
 export const OWNERS = [
@@ -32,16 +31,16 @@ export function displayNameInitials(name: string): string {
 export const INITIAL_ITEMS: RelayItem[] = [
   {
     id: "rly-1049",
-    name: "Cyber Liability Endorsement",
-    client: "Summit Cloud Services Inc.",
-    type: "Coverage Request",
+    name: "Ransomware Coverage Endorsement",
+    client: "Summit Healthcare Systems",
+    type: "Incident Response Review",
     status: "Complete",
     owner: "Jordan Lee",
-    priority: "Medium",
+    priority: "High",
     dueAt: "2026-04-02T12:00:00.000Z",
     updatedAt: "2026-04-04T15:30:00.000Z",
     summary:
-      "Endorsement drafted and issued. SOC-2 attestation on file; no open findings.",
+      "Endorsement issued post-incident. Retroactive sublimit applied; IR retainer confirmed on file. No coverage dispute.",
     activity: [
       {
         id: "a14",
@@ -53,16 +52,16 @@ export const INITIAL_ITEMS: RelayItem[] = [
   },
   {
     id: "rly-1046",
-    name: "Manufacturing Plant Walkthrough",
-    client: "Black River Manufacturing LLC",
-    type: "Risk Assessment",
+    name: "Data Breach Notification Review",
+    client: "Pacific Financial Group",
+    type: "Data Breach Evaluation",
     status: "Complete",
     owner: "Maya Chen",
     priority: "High",
     dueAt: "2026-04-01T12:00:00.000Z",
     updatedAt: "2026-04-03T11:00:00.000Z",
     summary:
-      "On-site notes reconciled with submission. Hazards within guidelines; file closed.",
+      "Breach notification timeline reviewed against state requirements. Regulatory exposure within sublimit; no coverage dispute.",
     activity: [
       {
         id: "a15",
@@ -74,16 +73,16 @@ export const INITIAL_ITEMS: RelayItem[] = [
   },
   {
     id: "rly-1042",
-    name: "Small Business Liability Review",
-    client: "Harborline Bistro Group",
-    type: "Application Review",
+    name: "Cyber Liability Application — SaaS",
+    client: "Apex Software Solutions",
+    type: "Cyber Renewal",
     status: "In Review",
     owner: "Maya Chen",
     priority: "High",
     dueAt: "2026-04-07T17:00:00.000Z",
     updatedAt: "2026-04-02T16:40:00.000Z",
     summary:
-      "Submission includes three locations and updated loss runs. Awaiting confirmation on subcontractor exposure.",
+      "Annual renewal. Applicant added two new cloud products since last bind. Awaiting updated SOC-2 Type II attestation.",
     activity: [
       {
         id: "a1",
@@ -95,22 +94,22 @@ export const INITIAL_ITEMS: RelayItem[] = [
         id: "a2",
         at: "2026-04-02T14:05:00.000Z",
         kind: "note",
-        text: "Requested updated financial documents",
+        text: "Requested updated SOC-2 attestation and vendor inventory",
       },
     ],
   },
   {
     id: "rly-1038",
-    name: "Contractor Renewal Assessment",
-    client: "Apex Contractors Cooperative",
-    type: "Renewal Review",
+    name: "Social Engineering Sublimit Assessment",
+    client: "Northgate Legal Partners",
+    type: "Sublimit Review",
     status: "Approved",
     owner: "Jordan Lee",
     priority: "Medium",
     dueAt: "2026-04-09T17:00:00.000Z",
     updatedAt: "2026-04-02T11:22:00.000Z",
     summary:
-      "Annual renewal with no material changes to operations. Loss history within appetite.",
+      "Social engineering sublimit reviewed against BEC exposure profile. Limits within appetite for professional services segment.",
     activity: [
       {
         id: "a3",
@@ -122,28 +121,28 @@ export const INITIAL_ITEMS: RelayItem[] = [
         id: "a4",
         at: "2026-04-01T09:30:00.000Z",
         kind: "note",
-        text: "Approved after final documentation review",
+        text: "Approved after final sublimit comparison — within BEC appetite",
       },
     ],
   },
   {
     id: "rly-1031",
-    name: "Property Risk Review",
-    client: "Meridian Retail Properties LP",
-    type: "Risk Assessment",
+    name: "Healthcare Data Privacy Review",
+    client: "Meridian Health Network",
+    type: "Data Breach Evaluation",
     status: "In Review",
     owner: "Priya Shah",
     priority: "High",
     dueAt: "2026-04-06T17:00:00.000Z",
     updatedAt: "2026-04-01T18:55:00.000Z",
     summary:
-      "Large-frame property with recent roof replacement. CAT modeling flagged for secondary review.",
+      "HIPAA breach involving 12,000+ patient records. PHI scope under review; regulatory counsel engaged for notification timeline.",
     activity: [
       {
         id: "a5",
         at: "2026-04-01T18:55:00.000Z",
         kind: "note",
-        text: "Flagged for secondary review",
+        text: "Flagged for regulatory counsel — PHI scope unclear pending forensics",
       },
       {
         id: "a6",
@@ -155,37 +154,37 @@ export const INITIAL_ITEMS: RelayItem[] = [
   },
   {
     id: "rly-1027",
-    name: "Coverage Change Request",
-    client: "Westbrook Equipment Rentals",
-    type: "Coverage Request",
+    name: "Ransomware Sublimit Endorsement",
+    client: "Westbrook Financial LLC",
+    type: "Sublimit Review",
     status: "Blocked",
     owner: "Alex Morgan",
     priority: "Medium",
     dueAt: "2026-04-03T17:00:00.000Z",
     updatedAt: "2026-04-01T09:08:00.000Z",
     summary:
-      "Client asked to broaden equipment coverage. Need clarity on valuation method before proceeding.",
+      "Sublimit increase request pending CAT modeling sign-off. Underwriting needs updated network architecture documentation.",
     activity: [
       {
         id: "a7",
         at: "2026-04-01T09:08:00.000Z",
         kind: "note",
-        text: "Waiting on broker clarification for scheduled equipment values",
+        text: "Waiting on network architecture docs before routing to CAT team",
       },
     ],
   },
   {
     id: "rly-1024",
-    name: "Multi-location Submission Review",
-    client: "Coastal Logistics Network",
-    type: "Application Review",
+    name: "Tech E&O Renewal — Multi-Tenant SaaS",
+    client: "Coastal Cloud Services",
+    type: "Cyber Renewal",
     status: "In Review",
     owner: "Sam Rivera",
     priority: "High",
     dueAt: "2026-04-11T17:00:00.000Z",
     updatedAt: "2026-03-31T15:47:00.000Z",
     summary:
-      "Eight locations across two states. Consolidated application; site list attached for verification.",
+      "Multi-tenant SaaS with 300+ enterprise clients. Supply chain risk flagged; third-party vendor inventory and SLA documentation requested.",
     activity: [
       {
         id: "a8",
@@ -197,16 +196,16 @@ export const INITIAL_ITEMS: RelayItem[] = [
   },
   {
     id: "rly-1019",
-    name: "Fleet Auto Policy Change",
-    client: "Pine Grove Transit Co.",
-    type: "Policy Change Request",
+    name: "Incident Response Retainer Review",
+    client: "Greenfield Logistics Co.",
+    type: "Incident Response Review",
     status: "Draft",
     owner: "Alex Morgan",
     priority: "Low",
     dueAt: "2026-04-14T17:00:00.000Z",
     updatedAt: "2026-03-30T13:20:00.000Z",
     summary:
-      "Mid-term driver roster update. Drafting internal summary before routing to review.",
+      "Pre-approved IR panel retainer expired. Drafting updated vendor list before routing for signature. Panel coverage remains active.",
     activity: [
       {
         id: "a9",
@@ -218,16 +217,16 @@ export const INITIAL_ITEMS: RelayItem[] = [
   },
   {
     id: "rly-1012",
-    name: "Retail Renewal — Northeast",
-    client: "Northeast Apparel Holdings",
-    type: "Renewal Review",
+    name: "Ransomware Assessment — Retail",
+    client: "Northeast Retail Holdings",
+    type: "Ransomware Assessment",
     status: "Complete",
     owner: "Priya Shah",
     priority: "Low",
     dueAt: "2026-03-28T12:00:00.000Z",
     updatedAt: "2026-03-29T17:02:00.000Z",
     summary:
-      "Renewal issued with adjusted limits. File closed after bind confirmation.",
+      "EDR coverage confirmed. MFA deployment verified across all POS systems. Renewal issued at flat rate; no adjustments required.",
     activity: [
       {
         id: "a10",
@@ -239,58 +238,58 @@ export const INITIAL_ITEMS: RelayItem[] = [
   },
   {
     id: "rly-1008",
-    name: "Warehouse Operations Assessment",
-    client: "Ironwood Storage Partners",
-    type: "Risk Assessment",
+    name: "Business Email Compromise Review",
+    client: "Ironwood Capital Partners",
+    type: "Data Breach Evaluation",
     status: "In Review",
     owner: "Jordan Lee",
     priority: "Medium",
     dueAt: "2026-04-05T17:00:00.000Z",
     updatedAt: "2026-03-28T10:15:00.000Z",
     summary:
-      "Focus on storage practices and sprinkler documentation. Site photos uploaded.",
+      "BEC incident with $340K fraudulent wire transfer. Coverage confirmed under social engineering sublimit. Recovery in progress.",
     activity: [
       {
         id: "a11",
         at: "2026-03-28T10:15:00.000Z",
         kind: "note",
-        text: "Follow up on fire protection testing dates",
+        text: "SWIFT recall filed — recovery timeline 10–15 business days",
       },
     ],
   },
   {
     id: "rly-1003",
-    name: "Professional Services Application",
-    client: "Keystone Advisory LLC",
-    type: "Application Review",
+    name: "Cyber Renewal — Professional Services",
+    client: "Keystone Advisory Group",
+    type: "Cyber Renewal",
     status: "Approved",
     owner: "Maya Chen",
     priority: "Medium",
     dueAt: "2026-04-08T12:00:00.000Z",
     updatedAt: "2026-03-27T14:40:00.000Z",
     summary:
-      "Consulting firm with low limits request. Contracts and W-9 verified.",
+      "Clean loss history. Updated questionnaire confirmed MFA and endpoint protection across all systems. Renewed with minor sublimit adjustment.",
     activity: [
       {
         id: "a12",
         at: "2026-03-27T14:40:00.000Z",
         kind: "note",
-        text: "Approved after final documentation review",
+        text: "Approved — MFA verified, clean loss run, sublimit adjusted +$250K",
       },
     ],
   },
   {
     id: "rly-0996",
-    name: "Umbrella Follow-up Request",
-    client: "Riverside Holdings Trust",
-    type: "Coverage Request",
+    name: "Supply Chain Attack Assessment",
+    client: "Riverside Technology Trust",
+    type: "Ransomware Assessment",
     status: "Draft",
     owner: "Sam Rivera",
     priority: "Low",
     dueAt: "2026-04-18T12:00:00.000Z",
     updatedAt: "2026-03-26T09:50:00.000Z",
     summary:
-      "Layered umbrella inquiry. Gathering underlying policy details from insured.",
+      "Third-party SaaS vendor compromise. Assessing downstream exposure for three policyholders; coverage analysis pending forensic report.",
     activity: [
       {
         id: "a13",

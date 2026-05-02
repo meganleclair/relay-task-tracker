@@ -6,11 +6,11 @@ export type ItemStatus =
   | "Complete";
 
 export type ItemType =
-  | "Application Review"
-  | "Renewal Review"
-  | "Risk Assessment"
-  | "Coverage Request"
-  | "Policy Change Request";
+  | "Incident Response Review"
+  | "Ransomware Assessment"
+  | "Data Breach Evaluation"
+  | "Cyber Renewal"
+  | "Sublimit Review";
 
 export type Priority = "Low" | "Medium" | "High";
 

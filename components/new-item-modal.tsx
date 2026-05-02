@@ -56,7 +56,7 @@ type NewItemModalProps = {
 export function NewItemModal({ opened, onClose, onCreate }: NewItemModalProps) {
   const [name, setName] = useState("");
   const [client, setClient] = useState("");
-  const [type, setType] = useState<ItemType>("Application Review");
+  const [type, setType] = useState<ItemType>("Cyber Renewal");
   const [owner, setOwner] = useState<string>(OWNERS[0]);
   const [priority, setPriority] = useState<Priority>("Medium");
   const [dueYmd, setDueYmd] = useState<string | null>(null);
@@ -66,7 +66,7 @@ export function NewItemModal({ opened, onClose, onCreate }: NewItemModalProps) {
     if (!opened) return;
     setName("");
     setClient("");
-    setType("Application Review");
+    setType("Cyber Renewal");
     setOwner(OWNERS[0]);
     setPriority("Medium");
     setDueYmd(null);

@@ -1,94 +1,94 @@
 import type { ItemStatus, Priority } from "@/lib/types";
 
-/** Tinted badges — a bit more saturation for personality (still light-mode safe). */
+/** Status pills for the detail panel — saturated tints. */
 export const STATUS_VISUAL: Record<
   ItemStatus,
   { background: string; color: string; border: string }
 > = {
   Draft: {
-    background: "rgba(130, 125, 115, 0.16)",
-    color: "#3d3a35",
-    border: "rgba(100, 95, 88, 0.28)",
+    background: "rgba(100, 120, 110, 0.16)",
+    color: "#2d4038",
+    border: "rgba(80, 105, 95, 0.28)",
   },
   "In Review": {
-    background: "rgba(118, 86, 168, 0.2)",
-    color: "#4a3568",
-    border: "rgba(98, 72, 148, 0.38)",
+    background: "rgba(15, 207, 152, 0.18)",
+    color: "#0a7a58",
+    border: "rgba(15, 207, 152, 0.36)",
   },
   Approved: {
-    background: "rgba(70, 118, 175, 0.22)",
-    color: "#2a4a72",
-    border: "rgba(56, 98, 155, 0.38)",
+    background: "rgba(79, 99, 229, 0.18)",
+    color: "#2d3db8",
+    border: "rgba(79, 99, 229, 0.34)",
   },
   Blocked: {
-    background: "rgba(230, 120, 95, 0.2)",
-    color: "#8b3a28",
-    border: "rgba(200, 90, 68, 0.38)",
+    background: "rgba(220, 50, 50, 0.16)",
+    color: "#991b1b",
+    border: "rgba(200, 40, 40, 0.32)",
   },
   Complete: {
-    background: "rgba(90, 155, 125, 0.18)",
-    color: "#2a5c45",
-    border: "rgba(70, 130, 105, 0.34)",
+    background: "rgba(15, 207, 152, 0.14)",
+    color: "#0a6644",
+    border: "rgba(15, 207, 152, 0.28)",
   },
 };
 
-/** Muted dots for priority (secondary to status badges). */
+/** Priority indicator dots */
 export const PRIORITY_DOT: Record<Priority, string> = {
-  Low: "#9a9690",
-  Medium: "#b8892a",
-  High: "#c24e3d",
+  Low:    "#9ab4ac",
+  Medium: "#d97706",
+  High:   "#dc2626",
 };
 
-/** Table-only status chips — cream-washed, earthy ink. */
+/** Table-row status chips — crisp, lightly tinted. */
 export const STATUS_BADGE_TABLE: Record<
   ItemStatus,
   { background: string; color: string; border: string }
 > = {
   Draft: {
-    background: "#f0ebe4",
-    color: "#4a4540",
-    border: "#e0d9cf",
+    background: "#eef3f0",
+    color:      "#3d5248",
+    border:     "#d0ddd8",
   },
   "In Review": {
-    background: "#efe9f5",
-    color: "#534770",
-    border: "#ddd5ea",
+    background: "#e8fdf6",
+    color:      "#0a7a58",
+    border:     "#a8f0d8",
   },
   Approved: {
-    background: "#e8eef8",
-    color: "#2f4a6e",
-    border: "#c8d6ea",
+    background: "#eef0fd",
+    color:      "#3340b8",
+    border:     "#c4caf6",
   },
   Blocked: {
-    background: "#f5ebe7",
-    color: "#6b4038",
-    border: "#e8d5ce",
+    background: "#fff0f0",
+    color:      "#b91c1c",
+    border:     "#fccaca",
   },
   Complete: {
-    background: "#e9f0ea",
-    color: "#3d5244",
-    border: "#d2e0d5",
+    background: "#e0faf2",
+    color:      "#0a6644",
+    border:     "#88e8cc",
   },
 };
 
-/** Table priority chips — same family as status (washed tints, readable ink). */
+/** Table priority chips */
 export const PRIORITY_BADGE_TABLE: Record<
   Priority,
   { background: string; color: string; border: string }
 > = {
   Low: {
-    background: "#efeeec",
-    color: "#5c5a56",
-    border: "#dcdad6",
+    background: "#f0f5f3",
+    color:      "#4e7368",
+    border:     "#d4e2dc",
   },
   Medium: {
-    background: "#f5f0e4",
-    color: "#6b5520",
-    border: "#e8dcc4",
+    background: "#fffbeb",
+    color:      "#92400e",
+    border:     "#fde68a",
   },
   High: {
-    background: "#f8ece9",
-    color: "#8b3328",
-    border: "#eccbc4",
+    background: "#fff1f2",
+    color:      "#be123c",
+    border:     "#fecdd3",
   },
 };
