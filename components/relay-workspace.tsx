@@ -190,7 +190,7 @@ const itemsToolbarInputStyles = {
 
 /** Accent colors per stat card — used for top border, icon tint, and hover shadow. */
 const STAT_ACCENT = {
-  inReview:  "#0fa070",
+  inReview:  "#a020a0",
   blocked:   "#dc2626",
   completed: "#059669",
   turnaround: "#4f63e5",

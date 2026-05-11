@@ -11,9 +11,9 @@ export const STATUS_VISUAL: Record<
     border: "rgba(80, 105, 95, 0.28)",
   },
   "In Review": {
-    background: "rgba(15, 207, 152, 0.18)",
-    color: "#0a7a58",
-    border: "rgba(15, 207, 152, 0.36)",
+    background: "rgba(200, 40, 200, 0.14)",
+    color: "#7a0f68",
+    border: "rgba(200, 40, 200, 0.32)",
   },
   Approved: {
     background: "rgba(79, 99, 229, 0.18)",
@@ -26,9 +26,9 @@ export const STATUS_VISUAL: Record<
     border: "rgba(200, 40, 40, 0.32)",
   },
   Complete: {
-    background: "rgba(15, 207, 152, 0.14)",
-    color: "#0a6644",
-    border: "rgba(15, 207, 152, 0.28)",
+    background: "rgba(5, 150, 105, 0.14)",
+    color: "#065f46",
+    border: "rgba(5, 150, 105, 0.30)",
   },
 };
 
@@ -50,9 +50,9 @@ export const STATUS_BADGE_TABLE: Record<
     border:     "#d0ddd8",
   },
   "In Review": {
-    background: "#e8fdf6",
-    color:      "#0a7a58",
-    border:     "#a8f0d8",
+    background: "#fce8f9",
+    color:      "#7a0f68",
+    border:     "#e088d0",
   },
   Approved: {
     background: "#eef0fd",
@@ -65,9 +65,9 @@ export const STATUS_BADGE_TABLE: Record<
     border:     "#fccaca",
   },
   Complete: {
-    background: "#e0faf2",
-    color:      "#0a6644",
-    border:     "#88e8cc",
+    background: "#d1fae5",
+    color:      "#065f46",
+    border:     "#6ee7b7",
   },
 };
 
