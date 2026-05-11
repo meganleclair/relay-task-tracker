@@ -92,12 +92,32 @@ const ALL_STATUSES: (ItemStatus | "all")[] = [
 ];
 
 /** One tint per weekday (Mon–Fri) for the activity bars. */
-const WEEKDAY_BAR_STYLES: { fill: string; border: string }[] = [
-  { fill: "rgba(15, 207, 152, 0.28)", border: "rgba(15, 207, 152, 0.48)" }, // teal
-  { fill: "rgba(79,  99, 229, 0.24)", border: "rgba(79,  99, 229, 0.40)" }, // indigo
-  { fill: "rgba(20, 150, 150, 0.24)", border: "rgba(15, 120, 120, 0.38)" }, // cyan
-  { fill: "rgba(124, 58, 237, 0.22)", border: "rgba(109, 40, 217, 0.36)" }, // violet
-  { fill: "rgba(5,  150, 105, 0.24)", border: "rgba(4,  120,  87, 0.38)" }, // emerald
+const WEEKDAY_BAR_STYLES: { gradient: string; border: string; glow: string }[] = [
+  {
+    gradient: "linear-gradient(180deg, rgba(15,207,152,0.62) 0%, rgba(15,207,152,0.18) 100%)",
+    border:   "rgba(15, 207, 152, 0.50)",
+    glow:     "rgba(15, 207, 152, 0.22)",
+  }, // teal
+  {
+    gradient: "linear-gradient(180deg, rgba(79,99,229,0.55) 0%, rgba(79,99,229,0.14) 100%)",
+    border:   "rgba(79,  99, 229, 0.42)",
+    glow:     "rgba(79,  99, 229, 0.18)",
+  }, // indigo
+  {
+    gradient: "linear-gradient(180deg, rgba(6,182,212,0.52) 0%, rgba(6,182,212,0.14) 100%)",
+    border:   "rgba(6,  182, 212, 0.38)",
+    glow:     "rgba(6,  182, 212, 0.16)",
+  }, // cyan
+  {
+    gradient: "linear-gradient(180deg, rgba(139,92,246,0.50) 0%, rgba(139,92,246,0.12) 100%)",
+    border:   "rgba(139, 92, 246, 0.36)",
+    glow:     "rgba(139, 92, 246, 0.16)",
+  }, // violet
+  {
+    gradient: "linear-gradient(180deg, rgba(16,185,129,0.52) 0%, rgba(16,185,129,0.14) 100%)",
+    border:   "rgba(16,  185, 129, 0.38)",
+    glow:     "rgba(16,  185, 129, 0.16)",
+  }, // emerald
 ];
 
 const PRIORITY_ORDER: Record<Priority, number> = {
@@ -112,17 +132,19 @@ const panelSurface = {
   background: "var(--relay-surface-card)",
 } as const;
 
-function metricCardSurface(active: boolean) {
+function metricCardSurface(active: boolean, accent: string) {
   return {
     ...panelSurface,
     cursor: "pointer" as const,
-    transition: "box-shadow 0.15s ease, background-color 0.15s ease",
+    borderTop: `3px solid ${active ? accent : `${accent}55`}`,
+    transition: "box-shadow 0.15s ease, background 0.15s ease, transform 0.12s ease",
     background: active
-      ? "var(--relay-surface-muted)"
+      ? `linear-gradient(180deg, ${accent}10 0%, var(--relay-surface-card) 60%)`
       : panelSurface.background,
     boxShadow: active
-      ? "0 2px 12px rgba(10, 30, 22, 0.09), 0 0 0 1px var(--relay-border-subtle)"
+      ? `0 4px 20px rgba(10, 30, 22, 0.10), 0 0 0 1px ${accent}30`
       : panelSurface.boxShadow,
+    transform: active ? "translateY(-2px)" : undefined,
   };
 }
 
@@ -166,16 +188,24 @@ const itemsToolbarInputStyles = {
   },
 } as const;
 
-function StatGlyph({ icon }: { icon: IconDefinition }) {
+/** Accent colors per stat card — used for top border, icon tint, and hover shadow. */
+const STAT_ACCENT = {
+  inReview:  "#0fa070",
+  blocked:   "#dc2626",
+  completed: "#059669",
+  turnaround: "#4f63e5",
+} as const;
+
+function StatGlyph({ icon, accent }: { icon: IconDefinition; accent: string }) {
   return (
     <Box
       style={{
-        width: 28,
-        height: 28,
-        borderRadius: 6,
+        width: 30,
+        height: 30,
+        borderRadius: 8,
         flexShrink: 0,
-        backgroundColor: "var(--relay-surface-muted)",
-        border: "1px solid var(--relay-border-subtle)",
+        backgroundColor: `${accent}18`,
+        border: `1px solid ${accent}2e`,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -187,8 +217,8 @@ function StatGlyph({ icon }: { icon: IconDefinition }) {
           fontSize: 13,
           width: 13,
           height: 13,
-          color: "var(--relay-text-meta)",
-          opacity: 0.85,
+          color: accent,
+          opacity: 0.9,
         }}
       />
     </Box>
@@ -929,196 +959,101 @@ export function RelayWorkspace() {
                       type="button"
                       aria-pressed={statusFilter === "In Review"}
                       onClick={() => toggleMetricStatusFilter("In Review")}
-                      style={{
-                        width: "100%",
-                        padding: 0,
-                        border: "none",
-                        background: "none",
-                        textAlign: "left" as const,
-                      }}
+                      style={{ width: "100%", padding: 0, border: "none", background: "none", textAlign: "left" as const }}
                     >
-                      <Paper
-                        radius="md"
-                        p={{ base: "md", sm: "lg" }}
-                        style={metricCardSurface(statusFilter === "In Review")}
-                      >
+                      <Paper radius="md" p={{ base: "md", sm: "lg" }} style={metricCardSurface(statusFilter === "In Review", STAT_ACCENT.inReview)}>
                         <Stack gap="sm">
-                          <Text
-                            fw={700}
-                            lh={1.05}
-                            style={{
-                              color: "var(--relay-text-strong)",
-                              fontSize: "1.875rem",
-                            }}
-                          >
+                          <Text fw={700} lh={1.05} style={{ color: "var(--relay-text-strong)", fontSize: "1.875rem" }}>
                             {summary.inReview}
                           </Text>
                           <Group gap="sm" align="center" wrap="nowrap">
-                            <StatGlyph icon={faClipboardList} />
-                            <Text
-                              size="xs"
-                              fw={500}
-                              tt="uppercase"
-                              lts={0.5}
-                              style={{ color: "var(--relay-text-meta)" }}
-                            >
+                            <StatGlyph icon={faClipboardList} accent={STAT_ACCENT.inReview} />
+                            <Text size="xs" fw={500} tt="uppercase" lts={0.5} style={{ color: "var(--relay-text-meta)" }}>
                               In review
                             </Text>
                           </Group>
-                          <Text
-                            size="xs"
-                            fw={400}
-                            lh={1.5}
-                            style={{ color: "var(--relay-text-meta)" }}
-                          >
+                          <Text size="xs" fw={400} lh={1.5} style={{ color: "var(--relay-text-meta)" }}>
                             Active decisions
                           </Text>
                         </Stack>
                       </Paper>
                     </UnstyledButton>
                     </Tooltip>
+
                     <Tooltip label="Filter by Blocked" openDelay={600} withArrow position="top">
                     <UnstyledButton
                       type="button"
                       aria-pressed={statusFilter === "Blocked"}
                       onClick={() => toggleMetricStatusFilter("Blocked")}
-                      style={{
-                        width: "100%",
-                        padding: 0,
-                        border: "none",
-                        background: "none",
-                        textAlign: "left" as const,
-                      }}
+                      style={{ width: "100%", padding: 0, border: "none", background: "none", textAlign: "left" as const }}
                     >
-                      <Paper
-                        radius="md"
-                        p={{ base: "md", sm: "lg" }}
-                        style={metricCardSurface(statusFilter === "Blocked")}
-                      >
+                      <Paper radius="md" p={{ base: "md", sm: "lg" }} style={metricCardSurface(statusFilter === "Blocked", STAT_ACCENT.blocked)}>
                         <Stack gap="sm">
-                          <Text
-                            fw={700}
-                            lh={1.05}
-                            style={{
-                              color: "var(--relay-text-strong)",
-                              fontSize: "1.875rem",
-                            }}
-                          >
+                          <Text fw={700} lh={1.05} style={{ color: summary.blocked > 0 ? STAT_ACCENT.blocked : "var(--relay-text-strong)", fontSize: "1.875rem" }}>
                             {summary.blocked}
                           </Text>
                           <Group gap="sm" align="center" wrap="nowrap">
-                            <StatGlyph icon={faBan} />
-                            <Text
-                              size="xs"
-                              fw={500}
-                              tt="uppercase"
-                              lts={0.5}
-                              style={{ color: "var(--relay-text-meta)" }}
-                            >
+                            <StatGlyph icon={faBan} accent={STAT_ACCENT.blocked} />
+                            <Text size="xs" fw={500} tt="uppercase" lts={0.5} style={{ color: "var(--relay-text-meta)" }}>
                               Blocked
                             </Text>
                           </Group>
-                          <Text
-                            size="xs"
-                            fw={400}
-                            lh={1.5}
-                            style={{ color: "var(--relay-text-meta)" }}
-                          >
+                          <Text size="xs" fw={400} lh={1.5} style={{ color: "var(--relay-text-meta)" }}>
                             Needs input to unblock
                           </Text>
                         </Stack>
                       </Paper>
                     </UnstyledButton>
                     </Tooltip>
+
                     <Tooltip label="Filter by Completed" openDelay={600} withArrow position="top">
                     <UnstyledButton
                       type="button"
                       aria-pressed={statusFilter === "Complete"}
                       onClick={() => toggleMetricStatusFilter("Complete")}
-                      style={{
-                        width: "100%",
-                        padding: 0,
-                        border: "none",
-                        background: "none",
-                        textAlign: "left" as const,
-                      }}
+                      style={{ width: "100%", padding: 0, border: "none", background: "none", textAlign: "left" as const }}
                     >
-                      <Paper
-                        radius="md"
-                        p={{ base: "md", sm: "lg" }}
-                        style={metricCardSurface(statusFilter === "Complete")}
-                      >
+                      <Paper radius="md" p={{ base: "md", sm: "lg" }} style={metricCardSurface(statusFilter === "Complete", STAT_ACCENT.completed)}>
                         <Stack gap="sm">
-                          <Text
-                            fw={700}
-                            lh={1.05}
-                            style={{
-                              color: "var(--relay-text-strong)",
-                              fontSize: "1.875rem",
-                            }}
-                          >
+                          <Text fw={700} lh={1.05} style={{ color: "var(--relay-text-strong)", fontSize: "1.875rem" }}>
                             {summary.completedThisWeek}
                           </Text>
                           <Group gap="sm" align="center" wrap="nowrap">
-                            <StatGlyph icon={faCircleCheck} />
-                            <Text
-                              size="xs"
-                              fw={500}
-                              tt="uppercase"
-                              lts={0.5}
-                              style={{ color: "var(--relay-text-meta)" }}
-                            >
+                            <StatGlyph icon={faCircleCheck} accent={STAT_ACCENT.completed} />
+                            <Text size="xs" fw={500} tt="uppercase" lts={0.5} style={{ color: "var(--relay-text-meta)" }}>
                               Completed
                             </Text>
                           </Group>
-                          <Text
-                            size="xs"
-                            fw={400}
-                            lh={1.5}
-                            style={{ color: "var(--relay-text-meta)" }}
-                          >
+                          <Text size="xs" fw={400} lh={1.5} style={{ color: "var(--relay-text-meta)" }}>
                             Closed in the last week
                           </Text>
                         </Stack>
                       </Paper>
                     </UnstyledButton>
                     </Tooltip>
-                    <Paper radius="md" p={{ base: "md", sm: "lg" }} style={panelSurface}>
+
+                    <Paper radius="md" p={{ base: "md", sm: "lg" }}
+                      style={{
+                        ...panelSurface,
+                        borderTop: `3px solid ${STAT_ACCENT.turnaround}55`,
+                      }}
+                    >
                       <Stack gap="sm">
                         <Group gap={8} align="baseline" wrap="nowrap">
-                          <Text
-                            fw={700}
-                            lh={1.05}
-                            style={{ color: "var(--relay-text-strong)", fontSize: "1.875rem" }}
-                          >
+                          <Text fw={700} lh={1.05} style={{ color: "var(--relay-text-strong)", fontSize: "1.875rem" }}>
                             {AVG_TURNAROUND_DAYS_MOCK}
                           </Text>
-                          <Text
-                            size="xs"
-                            fw={500}
-                            style={{ color: "var(--relay-text-meta)" }}
-                          >
+                          <Text size="xs" fw={500} style={{ color: "var(--relay-text-meta)" }}>
                             days
                           </Text>
                         </Group>
                         <Group gap="sm" align="center" wrap="nowrap">
-                          <StatGlyph icon={faStopwatch} />
-                          <Text
-                            size="xs"
-                            fw={500}
-                            tt="uppercase"
-                            lts={0.5}
-                            style={{ color: "var(--relay-text-meta)" }}
-                          >
+                          <StatGlyph icon={faStopwatch} accent={STAT_ACCENT.turnaround} />
+                          <Text size="xs" fw={500} tt="uppercase" lts={0.5} style={{ color: "var(--relay-text-meta)" }}>
                             Avg. turnaround
                           </Text>
                         </Group>
-                        <Text
-                          size="xs"
-                          fw={400}
-                          lh={1.5}
-                          style={{ color: "var(--relay-text-meta)" }}
-                        >
+                        <Text size="xs" fw={400} lh={1.5} style={{ color: "var(--relay-text-meta)" }}>
                           Rolling average
                         </Text>
                       </Stack>
@@ -1187,9 +1122,10 @@ export function RelayWorkspace() {
                       >
                         {weekdayTouchCounts.map((v, i) => {
                           const pct = v / maxActivity;
-                          const barH = 10 + pct * 44;
-                          const fill = WEEKDAY_BAR_STYLES[i]?.fill ?? "rgba(15, 207, 152, 0.09)";
+                          const barH = 12 + pct * 68;
+                          const gradient = WEEKDAY_BAR_STYLES[i]?.gradient ?? "linear-gradient(180deg, rgba(15,207,152,0.4) 0%, rgba(15,207,152,0.12) 100%)";
                           const border = WEEKDAY_BAR_STYLES[i]?.border ?? "var(--relay-border-subtle)";
+                          const glow = WEEKDAY_BAR_STYLES[i]?.glow ?? "transparent";
                           const selected = activityWeekdayFilter === i;
                           const hovered = hoveredActivityDay === i;
                           const breakdownLine = activityDayTooltipLines[i] ?? "";
@@ -1258,7 +1194,7 @@ export function RelayWorkspace() {
                                   </Text>
                                   <Box
                                     style={{
-                                      height: 72,
+                                      height: 96,
                                       width: "100%",
                                       display: "flex",
                                       alignItems: "flex-end",
@@ -1269,14 +1205,14 @@ export function RelayWorkspace() {
                                       style={{
                                         width: "min(100%, 32px)",
                                         height: barH,
-                                        borderRadius: "var(--mantine-radius-md)",
-                                        backgroundColor: fill,
+                                        borderRadius: "6px 6px 3px 3px",
+                                        background: gradient,
                                         border: `1px solid ${border}`,
                                         filter:
                                           hovered && !selected
-                                            ? "brightness(0.92)"
+                                            ? "brightness(1.08)"
                                             : selected
-                                              ? "saturate(1.08)"
+                                              ? "saturate(1.15) brightness(1.05)"
                                               : undefined,
                                         transform: selected
                                           ? "scale(1.04)"
@@ -1284,8 +1220,8 @@ export function RelayWorkspace() {
                                         transition:
                                           "filter 0.12s ease, transform 0.12s ease",
                                         boxShadow: selected
-                                          ? "0 1px 4px rgba(10, 30, 22, 0.08)"
-                                          : undefined,
+                                          ? `0 2px 10px ${glow}, 0 0 0 1px ${border}`
+                                          : `0 1px 4px ${glow}`,
                                       }}
                                     />
                                   </Box>

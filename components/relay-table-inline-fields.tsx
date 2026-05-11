@@ -14,6 +14,7 @@ import { OWNERS } from "@/lib/mock-data";
 import { STATUS_HELP } from "@/lib/status-help";
 import {
   PRIORITY_BADGE_TABLE,
+  PRIORITY_DOT,
   STATUS_BADGE_TABLE,
 } from "@/components/status-styles";
 import {
@@ -38,6 +39,66 @@ function isItemStatus(v: string): v is ItemStatus {
 
 function isPriority(v: string): v is Priority {
   return (PRIORITY_OPTIONS as string[]).includes(v);
+}
+
+/** Pixel widths for left-section icons in tinted selects. */
+const STATUS_LEFT_W = 24;
+const PRIORITY_LEFT_W = 28;
+
+/** Colored circle dot — shown as leftSection in the inline status select. */
+function StatusDotIcon({ color }: { color: string }) {
+  return (
+    <Box
+      component="span"
+      style={{
+        width: 8,
+        height: 8,
+        borderRadius: "50%",
+        background: color,
+        flexShrink: 0,
+        display: "block",
+        boxShadow: `0 0 5px ${color}80`,
+      }}
+    />
+  );
+}
+
+/** Signal-strength bars — shown as leftSection in the inline priority select. */
+function PriorityBarsIcon({ priority }: { priority: Priority }) {
+  const filled: [boolean, boolean, boolean] =
+    priority === "High"
+      ? [true, true, true]
+      : priority === "Medium"
+        ? [true, true, false]
+        : [true, false, false];
+  const color = PRIORITY_DOT[priority];
+  return (
+    <Box
+      component="span"
+      style={{
+        display: "inline-flex",
+        alignItems: "flex-end",
+        gap: 2,
+        flexShrink: 0,
+        paddingBottom: 1,
+      }}
+    >
+      {([4, 7, 10] as const).map((h, idx) => (
+        <Box
+          key={idx}
+          component="span"
+          style={{
+            width: 3,
+            height: h,
+            borderRadius: 1.5,
+            background: filled[idx] ? color : `${color}28`,
+            flexShrink: 0,
+            transition: "background 0.15s",
+          }}
+        />
+      ))}
+    </Box>
+  );
 }
 
 const navIconStyle = {
@@ -155,11 +216,17 @@ function optionPillStyle(v: StatusPriorityTint): CSSProperties {
   };
 }
 
-function tintedInlineSelectStyles(v: StatusPriorityTint) {
+/**
+ * Tinted inline select styles.
+ * `leftWidth` — if a leftSection icon is used, pass its container width so
+ * the input text doesn't overlap the absolutely-positioned section icon.
+ */
+function tintedInlineSelectStyles(v: StatusPriorityTint, leftWidth = 0) {
   return {
     root: inlineSelectInputStyles.root,
     input: {
       ...inlineSelectInputStyles.input,
+      paddingInlineStart: leftWidth > 0 ? leftWidth + 4 : 6,
       color: v.color,
       backgroundColor: v.background,
       border: `1px solid ${v.border}`,
@@ -344,7 +411,7 @@ export function RelayInlineStatusSelect({
 }: InlineStatusProps) {
   const { flashing, triggerFlash } = useInlineSelectionFlash();
   const tint = STATUS_BADGE_TABLE[status];
-  const selectStyles = tintedInlineSelectStyles(tint);
+  const selectStyles = tintedInlineSelectStyles(tint, STATUS_LEFT_W);
   return (
     <Box
       className={inlineFieldClassName(flashing)}
@@ -378,6 +445,8 @@ export function RelayInlineStatusSelect({
                 {option.label}
               </Box>
             )}
+            leftSection={<StatusDotIcon color={tint.color} />}
+            leftSectionWidth={STATUS_LEFT_W}
             rightSectionWidth={RELAY_INLINE_CHEVRON_SLOT_PX}
             rightSection={<InlineChevron style={{ color: tint.color }} />}
             rightSectionPointerEvents="none"
@@ -401,7 +470,7 @@ export function RelayInlinePrioritySelect({
 }: InlinePriorityProps) {
   const { flashing, triggerFlash } = useInlineSelectionFlash();
   const tint = PRIORITY_BADGE_TABLE[priority];
-  const selectStyles = tintedInlineSelectStyles(tint);
+  const selectStyles = tintedInlineSelectStyles(tint, PRIORITY_LEFT_W);
   return (
     <Box
       className={inlineFieldClassName(flashing)}
@@ -433,6 +502,8 @@ export function RelayInlinePrioritySelect({
             {option.label}
           </Box>
         )}
+        leftSection={<PriorityBarsIcon priority={priority} />}
+        leftSectionWidth={PRIORITY_LEFT_W}
         rightSectionWidth={RELAY_INLINE_CHEVRON_SLOT_PX}
         rightSection={<InlineChevron style={{ color: tint.color }} />}
         rightSectionPointerEvents="none"
