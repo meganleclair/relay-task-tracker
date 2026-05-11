@@ -288,15 +288,15 @@ function RelaySignedOutScreen({ onSignIn }: { onSignIn: () => void }) {
             style={{ fontSize: 28, width: 28, height: 28, color: "var(--relay-accent)", marginBottom: 8 }}
           />
           <Title order={2} size="h3" fw={600} style={{ color: "var(--relay-text-strong)" }}>
-            Cyber Ops — Sign in
+            Threshold — Sign in
           </Title>
           <Text
             size="sm"
             lh={1.55}
             style={{ color: "var(--relay-text-secondary)" }}
           >
-            Sign back in to open your Relay workspace. This demo remembers your
-            choice in the browser on this device.
+            Sign back in to open your Threshold workspace. This demo remembers
+            your choice in the browser on this device.
           </Text>
           <Button onClick={onSignIn} radius="md" color="tealGreen">
             Sign back in
@@ -791,7 +791,7 @@ export function RelayWorkspace() {
                 <FontAwesomeIcon icon={faShieldHalved} style={{ width: 15, height: 15, color: "var(--relay-accent)" }} />
               </Box>
               <Stack gap={0}>
-                <Text fw={700} size="sm" style={{ color: "#ffffff", lineHeight: 1.25, letterSpacing: "-0.01em" }}>Relay</Text>
+                <Text fw={700} size="sm" style={{ color: "#ffffff", lineHeight: 1.25, letterSpacing: "-0.01em" }}>Threshold</Text>
                 <Text style={{ fontSize: 10, color: "rgba(255,255,255,0.38)", lineHeight: 1.2, letterSpacing: "0.04em", textTransform: "uppercase" }}>Cyber Ops</Text>
               </Stack>
             </Group>

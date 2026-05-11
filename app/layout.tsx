@@ -11,20 +11,20 @@ const relaySans = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Relay — Workflow & decisions",
+  title: "Threshold — Cyber Insurance Ops",
   description:
-    "Review, track, and move items through your team’s decision workflow.",
+    "Underwriting operations workspace for cyber insurance teams—track ransomware assessments, breach evaluations, and renewals with clear ownership and an auditable decision trail.",
   openGraph: {
-    title: "Relay — Workflow & decisions",
+    title: "Threshold — Cyber Insurance Ops",
     description:
-      "A focused operations workspace: queue, filters, inline edits, and intake—built with Next.js and Mantine.",
+      "Purpose-built ops tool for cyber underwriting teams: queue, filters, inline edits, activity log, and intake—built with Next.js and Mantine.",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Relay — Workflow & decisions",
+    title: "Threshold — Cyber Insurance Ops",
     description:
-      "Operations workspace demo: dashboard, filterable table, detail drawer, and new-item intake.",
+      "Cyber underwriting ops: filterable queue, inline editing, activity log, and team intake. Built with Next.js and Mantine.",
   },
 };
 
