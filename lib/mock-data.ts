@@ -79,20 +79,20 @@ export const INITIAL_ITEMS: RelayItem[] = [
     status: "In Review",
     owner: "Maya Chen",
     priority: "High",
-    dueAt: "2026-04-07T17:00:00.000Z",
-    updatedAt: "2026-04-02T16:40:00.000Z",
+    dueAt: "2026-05-19T17:00:00.000Z",
+    updatedAt: "2026-05-08T16:40:00.000Z",
     summary:
       "Annual renewal. Applicant added two new cloud products since last bind. Awaiting updated SOC-2 Type II attestation.",
     activity: [
       {
         id: "a1",
-        at: "2026-04-02T16:40:00.000Z",
+        at: "2026-05-08T16:40:00.000Z",
         kind: "system",
         text: "Ownership moved to Maya Chen",
       },
       {
         id: "a2",
-        at: "2026-04-02T14:05:00.000Z",
+        at: "2026-05-08T14:05:00.000Z",
         kind: "note",
         text: "Requested updated SOC-2 attestation and vendor inventory",
       },
@@ -106,20 +106,20 @@ export const INITIAL_ITEMS: RelayItem[] = [
     status: "Approved",
     owner: "Jordan Lee",
     priority: "Medium",
-    dueAt: "2026-04-09T17:00:00.000Z",
-    updatedAt: "2026-04-02T11:22:00.000Z",
+    dueAt: "2026-05-15T17:00:00.000Z",
+    updatedAt: "2026-05-07T11:22:00.000Z",
     summary:
       "Social engineering sublimit reviewed against BEC exposure profile. Limits within appetite for professional services segment.",
     activity: [
       {
         id: "a3",
-        at: "2026-04-02T11:22:00.000Z",
+        at: "2026-05-07T11:22:00.000Z",
         kind: "system",
         text: "Status set to Approved",
       },
       {
         id: "a4",
-        at: "2026-04-01T09:30:00.000Z",
+        at: "2026-05-06T09:30:00.000Z",
         kind: "note",
         text: "Approved after final sublimit comparison — within BEC appetite",
       },
@@ -133,20 +133,20 @@ export const INITIAL_ITEMS: RelayItem[] = [
     status: "In Review",
     owner: "Priya Shah",
     priority: "High",
-    dueAt: "2026-04-06T17:00:00.000Z",
-    updatedAt: "2026-04-01T18:55:00.000Z",
+    dueAt: "2026-05-16T17:00:00.000Z",
+    updatedAt: "2026-05-06T18:55:00.000Z",
     summary:
       "HIPAA breach involving 12,000+ patient records. PHI scope under review; regulatory counsel engaged for notification timeline.",
     activity: [
       {
         id: "a5",
-        at: "2026-04-01T18:55:00.000Z",
+        at: "2026-05-06T18:55:00.000Z",
         kind: "note",
         text: "Flagged for regulatory counsel — PHI scope unclear pending forensics",
       },
       {
         id: "a6",
-        at: "2026-03-31T10:12:00.000Z",
+        at: "2026-05-05T10:12:00.000Z",
         kind: "system",
         text: "Status set to In Review",
       },
@@ -160,14 +160,14 @@ export const INITIAL_ITEMS: RelayItem[] = [
     status: "Blocked",
     owner: "Alex Morgan",
     priority: "Medium",
-    dueAt: "2026-04-03T17:00:00.000Z",
-    updatedAt: "2026-04-01T09:08:00.000Z",
+    dueAt: "2026-05-14T17:00:00.000Z",
+    updatedAt: "2026-05-06T09:08:00.000Z",
     summary:
       "Sublimit increase request pending CAT modeling sign-off. Underwriting needs updated network architecture documentation.",
     activity: [
       {
         id: "a7",
-        at: "2026-04-01T09:08:00.000Z",
+        at: "2026-05-06T09:08:00.000Z",
         kind: "note",
         text: "Waiting on network architecture docs before routing to CAT team",
       },
@@ -181,14 +181,14 @@ export const INITIAL_ITEMS: RelayItem[] = [
     status: "In Review",
     owner: "Sam Rivera",
     priority: "High",
-    dueAt: "2026-04-11T17:00:00.000Z",
-    updatedAt: "2026-03-31T15:47:00.000Z",
+    dueAt: "2026-05-21T17:00:00.000Z",
+    updatedAt: "2026-05-05T15:47:00.000Z",
     summary:
       "Multi-tenant SaaS with 300+ enterprise clients. Supply chain risk flagged; third-party vendor inventory and SLA documentation requested.",
     activity: [
       {
         id: "a8",
-        at: "2026-03-31T15:47:00.000Z",
+        at: "2026-05-05T15:47:00.000Z",
         kind: "system",
         text: "Ownership moved to Sam Rivera",
       },
@@ -202,14 +202,14 @@ export const INITIAL_ITEMS: RelayItem[] = [
     status: "Draft",
     owner: "Alex Morgan",
     priority: "Low",
-    dueAt: "2026-04-14T17:00:00.000Z",
-    updatedAt: "2026-03-30T13:20:00.000Z",
+    dueAt: "2026-05-28T17:00:00.000Z",
+    updatedAt: "2026-05-04T13:20:00.000Z",
     summary:
       "Pre-approved IR panel retainer expired. Drafting updated vendor list before routing for signature. Panel coverage remains active.",
     activity: [
       {
         id: "a9",
-        at: "2026-03-30T13:20:00.000Z",
+        at: "2026-05-04T13:20:00.000Z",
         kind: "system",
         text: "Item created",
       },
@@ -244,14 +244,14 @@ export const INITIAL_ITEMS: RelayItem[] = [
     status: "In Review",
     owner: "Jordan Lee",
     priority: "Medium",
-    dueAt: "2026-04-05T17:00:00.000Z",
-    updatedAt: "2026-03-28T10:15:00.000Z",
+    dueAt: "2026-05-16T17:00:00.000Z",
+    updatedAt: "2026-05-03T10:15:00.000Z",
     summary:
       "BEC incident with $340K fraudulent wire transfer. Coverage confirmed under social engineering sublimit. Recovery in progress.",
     activity: [
       {
         id: "a11",
-        at: "2026-03-28T10:15:00.000Z",
+        at: "2026-05-03T10:15:00.000Z",
         kind: "note",
         text: "SWIFT recall filed — recovery timeline 10–15 business days",
       },
@@ -265,14 +265,14 @@ export const INITIAL_ITEMS: RelayItem[] = [
     status: "Approved",
     owner: "Maya Chen",
     priority: "Medium",
-    dueAt: "2026-04-08T12:00:00.000Z",
-    updatedAt: "2026-03-27T14:40:00.000Z",
+    dueAt: "2026-05-08T12:00:00.000Z",
+    updatedAt: "2026-05-02T14:40:00.000Z",
     summary:
       "Clean loss history. Updated questionnaire confirmed MFA and endpoint protection across all systems. Renewed with minor sublimit adjustment.",
     activity: [
       {
         id: "a12",
-        at: "2026-03-27T14:40:00.000Z",
+        at: "2026-05-02T14:40:00.000Z",
         kind: "note",
         text: "Approved — MFA verified, clean loss run, sublimit adjusted +$250K",
       },
@@ -286,14 +286,14 @@ export const INITIAL_ITEMS: RelayItem[] = [
     status: "Draft",
     owner: "Sam Rivera",
     priority: "Low",
-    dueAt: "2026-04-18T12:00:00.000Z",
-    updatedAt: "2026-03-26T09:50:00.000Z",
+    dueAt: "2026-06-04T12:00:00.000Z",
+    updatedAt: "2026-05-01T09:50:00.000Z",
     summary:
       "Third-party SaaS vendor compromise. Assessing downstream exposure for three policyholders; coverage analysis pending forensic report.",
     activity: [
       {
         id: "a13",
-        at: "2026-03-26T09:50:00.000Z",
+        at: "2026-05-01T09:50:00.000Z",
         kind: "system",
         text: "Item created",
       },
